@@ -1,16 +1,16 @@
 # Att&ckCommands
 
-This is a tool that I have developed to help learn penetration testing and red teaming.
+This is a tool that I have developed to help learn penetration testing and red teaming. (Still under development)
 
 ### Installation and Use
 To install:
 ```
-sudo git clone /opt/Att&ckCommands
+sudo git clone https://github.com/SecurityNoodle/AttackCommands.git /opt/AttackCommands
 ```
 
 To use:
 ```
-python3 Att&ckCommands.py <section> <OS>
+python3 /opt/AttackCommands/Att&ckCommands.py <section> <OS>
 ```
 
 The `section` is what part of the [MITRE ATT&CK framework](https://attack.mitre.org/) you want to list commands from. Sections include:
