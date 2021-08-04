@@ -1,0 +1,85 @@
+{
+    "commands":
+    [
+        {   
+            "title": "Nmap scan",
+            "description": "Does a basic nmap scan of the IP address and saves it into three formats with the root name being Name_of_File.",
+            "command": "nmap -sC -sV -oA <name> <address>",
+            "example": "nmap -sC -sV -oA nmap_scan 10.10.10.10",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "This will save the results in three file formats: '.nmap', '.gmap', and '.xml' (The '.nmap' file will store the output as you would normally see it on the terminal.)"
+        },
+        {
+            "title": "Nmap scan for all ports",
+            "description": "Does an nmap scan for all ports on the target IP address.",
+            "command": "nmap -p- -sC -sV -oA <name> <address>",
+            "example": "nmap -p- -sC -sV -oA allports 10.10.10.169",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
+        },
+        {
+            "title": "Dirb scan",
+            "description": "Utilizes dirb (command line version or dirbuster) to brute-force URIs.",
+            "command": "dirb <url> <wordlist>",
+            "example": "dirb http://10.10.10.75/nibbleblog /usr/share/wordlists/dirb/common.txt",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Can also utilize the GUI version dirbuster (though I find that to be slower)."
+        },
+        {
+            "title": "Gobuster scan",
+            "description": "Utilizes gobuster to brute-force URIs.",
+            "command": "gobuster dir -u <address> -w <wordlist> -o <name> -t <threads>",
+            "example": "gobuster dir -u http://10.10.10.75/nibbleblog/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -o gobuster_results.txt -t 100",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "On Kali Linux, wordlists stored under /usr/share/wordlists/. In the example, the '-o' and the '-t' flags are not necessasry."
+        },
+        {
+            "title": "Wfuzz to find potential files or URIs",
+            "description": "If you know you need to find a specific file or URI/directory, you can utilize wfuzz matched with a wordlist to brute force this.",
+            "command": "wfuzz --hc 404 -Z -w <wordlist> -u <domain>/FUZZ/<file name>",
+            "example": "wfuzz --hc 404 -Z -w /usr/share/wordlists/dirbuster/directory-list-2.3-small.txt -u http://10.10.10.168:8080/FUZZ/SuperSecureServer.py",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "This situation/example was from a HackTheBox challenge (Obscurity) where it was discovered that there was a file named 'SuperSecureServer.py' in some unknown directory. In this case, I used wfuzz to find what the directory name is. It will replace 'FUZZ' with every word in the wordlists."
+        },
+        {
+            "title": "Wfuzz to find subdomains",
+            "description": "Finding subdomains using wfuzz.",
+            "command": "wfuzz --sc 200 -w <wordlist> -H \"Host: FUZZ.<domain>\" -u <domain>",
+            "example": "wfuzz --sc 200 -w /usr/share/wordlists/dirb/common.txt -H \"Host: FUZZ.sneakycorp.htb\" -u http://sneakycorp.htb",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Needs to have the quotation marks."
+        },
+        {
+            "title": "Sublist3r to find subdomains",
+            "description": "Sublist3r is a tool that utilizes several websites and search engines to find subdomains, sublist3r is quiet.",
+            "command": "python3 sublist3r.py -d <domain>",
+            "example": "python3 sublist3r.py -d cyberspacekittens.com",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Needs to be installed: sudo git clone https://github.com/aboul3la/Sublist3r /opt/sublist3r"
+        },
+        {
+            "title": "Enum4linux to enumerate SMB",
+            "description": "Uses enum4linux to enumerate SMB",
+            "command": "enum4linux <address>",
+            "example": "enum4linux 10.10.10.169",
+            "target OS": ["Windows"],
+            "notes": "The output is pretty noisy, recommend outputing to file."
+        },
+        {
+            "title": "Wpscan to enumerate users",
+            "description": "Using wpscan to enumerate users on a wordpress website.",
+            "command": "wpscan --url <address> --enumerate u",
+            "example": "wpscan --url 10.10.10.37 --enumerate u",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Would recommend outputting to a file."
+        },
+        {
+            "title": "Wpscan to enumerate plugins",
+            "description": "Using wpscan to enumerate the plugins on a wordpress website.",
+            "command": "wpscan --url <address> --enumerate p",
+            "example": "wpscan --url 10.10.10.37 --enumerate p",
+            "target OS": ["Windows", "Linux", "Mac"],
+            "notes": "Would recommend outputting to a file."
+        }
+    ] 
+}
