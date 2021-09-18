@@ -1,0 +1,55 @@
+{
+    "recon":
+    [
+        {   
+            "command": "nmap -sC -sV -oA <name> <address>",
+            "section": "recon",
+            "description": "This will save the results in three file formats: '.nmap', '.gmap', and '.xml' (The '.nmap' file will store the output as you would normally see it on the terminal.)"
+        },
+        {
+            "command": "nmap -p- -sC -sV -oA <name> <address>",
+            "section": "recon",
+            "description": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
+        },
+        {
+            "command": "dirb <url> <wordlist>",
+            "section": "recon",
+            "description": "Can also utilize the GUI version dirbuster (though I find that to be slower)."
+        },
+        {
+            "command": "gobuster dir -u <address> -w <wordlist> -o <name> -t <threads>",
+            "section": "recon",
+            "description": "On Kali Linux, wordlists stored under /usr/share/wordlists/. In the example, the '-o' and the '-t' flags are not necessasry."
+        },
+        {
+            "command": "wfuzz --hc 404 -Z -w <wordlist> -u <domain>/FUZZ/<file name>",
+            "section": "recon",
+            "description": "This situation/example was from a HackTheBox challenge (Obscurity) where it was discovered that there was a file named 'SuperSecureServer.py' in some unknown directory. In this case, I used wfuzz to find what the directory name is. It will replace 'FUZZ' with every word in the wordlists."
+        },
+        {
+            "command": "wfuzz --sc 200 -w <wordlist> -H \"Host: FUZZ.<domain>\" -u <domain>",
+            "section": "recon",
+            "description": "Needs to have the quotation marks."
+        },
+        {
+            "command": "python3 sublist3r.py -d <domain>",
+            "section": "recon",
+            "description": "Needs to be installed: sudo git clone https://github.com/aboul3la/Sublist3r /opt/sublist3r"
+        },
+        {
+            "command": "enum4linux <address>",
+            "section": "recon",
+            "description": "The output is pretty noisy, recommend outputing to file."
+        },
+        {
+            "title": "Wpscan to enumerate users",
+            "section": "recon",
+            "description": "Would recommend outputting to a file."
+        },
+        {
+            "command": "wpscan --url <address> --enumerate p",
+            "section": "recon",
+            "description": "Would recommend outputting to a file."
+        }
+    ] 
+}
