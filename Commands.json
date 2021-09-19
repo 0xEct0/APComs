@@ -42,7 +42,7 @@
             "description": "The output is pretty noisy, recommend outputing to file."
         },
         {
-            "title": "Wpscan to enumerate users",
+            "command": "Wpscan to enumerate users",
             "section": "recon",
             "description": "Would recommend outputting to a file."
         },
@@ -51,5 +51,19 @@
             "section": "recon",
             "description": "Would recommend outputting to a file."
         }
-    ] 
+    ],
+    "init":
+    [
+        {
+            "command": "first initial access placeholder",
+            "section": "first initial access placeholder",
+            "description": "first initial access placeholder"
+        },
+        {
+            "command": "second initial access placeholder",
+            "section": "second initial access placeholder",
+            "description": "second initial access placeholder"
+        }
+    ]
+
 }
