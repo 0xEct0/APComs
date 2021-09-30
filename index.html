@@ -1,0 +1,150 @@
+<!--    
+    todo
+        - filter based on buttons
+        - combine filters
+ -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            AttackCommands
+        </title>
+        <style>
+            p
+            {
+                font-family: "Lucida Console";
+                font-size: 20px;
+                margin:30px;
+                margin-right:30%;
+            }
+            #AttackTable
+            {
+                margin-left: 30px;
+                border: 1px solid black;
+                border-collapse: collapse;
+                word-wrap: break-word;
+                table-layout: fixed;
+                width: 80%;
+            }
+            #AttackTable th
+            {
+                background-color: rgb(0, 128, 145);
+                border: 1px solid black;
+                color: white;
+                padding-top: 12px;
+                padding-bottom: 12px;
+                padding: 8px;
+                font-family: monospace;
+                font-size: 25px;
+                text-align: left;
+            }
+            #AttackTable td
+            {
+                
+                border: 1px solid black;
+                padding: 8px;
+                font-family: "Helvetica Neue", "Arial", sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="font-family: monospace; margin:20px; font-size:40px">
+            AttackCommands
+        </h1>
+        <p>
+            This page will contain a high-level overview of general attack paths, vectors, and commands that I’ve utilized from competitions and CTFs. The page was built to help prepare for the OSCP certification exam along with having a readily available resource to use during the exam.
+            <br>
+            <br>
+            For organization and ease of use, each of the attack paths and their commands are organized based on the MITRE ATT&CK framework.
+        </p>
+
+
+        <div class="search-box">
+            <input type="text" id="inputFilter" placeholder="Type in keyword" style="margin-left: 30px;" onkeyup="typeFilter()">
+        </div>
+
+        <br>
+        <button style="margin-left: 30px;" onclick="clearFields();">Reset</button>
+        <button>Recon</button>
+        <button>Initial Access Exploitation</button>
+        <button>Privilege Escalation</button>
+        <button>Discovery</button>
+        <button>Exfiltration/File Movement</button>
+        <br><br>
+
+        <table id="AttackTable">
+            <tr class="header">
+                <th>Command</th>
+                <th width="125px">Section</th>
+                <th>Description</th>
+            </tr>
+        </table>
+    </body>
+</html>
+
+<script>
+
+fetch('https://raw.githubusercontent.com/SecurityNoodle/AttackCommands/main/Commands.json')
+.then((response) => 
+{
+    return response.json();
+})
+.then((myJson) => 
+{
+    console.log(myJson);
+    console.log(myJson.init[0].command);
+    
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the recon commands
+    var length = myJson.recon.length;
+    for (var i = 0; i < length; i++)
+    {
+        new_row = tbl.insertRow(-1);
+        new_cell1 = new_row.insertCell(0); // creates first cell
+        new_cell2 = new_row.insertCell(1); // creates second cell
+        new_cell3 = new_row.insertCell(2);  // creates third cell
+        new_cell1.innerHTML = myJson.recon[i].command;
+        new_cell2.innerHTML = myJson.recon[i].section;
+        new_cell3.innerHTML = myJson.recon[i].description;        
+    }
+});
+
+const typeFilter = () =>
+{
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+  
+    trs.forEach(setTrStyleDisplay);
+};
+
+function clearFields()
+{
+    document.getElementById("inputFilter").value = "";
+    
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+  
+    trs.forEach(setTrStyleDisplay);
+}
+
+</script>
