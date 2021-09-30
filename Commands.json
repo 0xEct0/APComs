@@ -2,7 +2,7 @@
     "recon":
     [
         {   
-            "command": "nmap -sC -sV -oA <name> <address>",
+            "command": "nmap -sC -sV -oA [name] [address]",
             "section": "recon",
             "description": "This will save the results in three file formats: '.nmap', '.gmap', and '.xml' (The '.nmap' file will store the output as you would normally see it on the terminal.)"
         },
