@@ -7,16 +7,17 @@
 <html>
     <head>
         <title>
-            AttackCommands
+            APComs
         </title>
+        <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SecurityNoodle/APComs/main/favicon.png">
         <style>
             p
             {
                 font-family: "Helvetica Neue", "Arial", "sans-serif";
                 font-size: 20px;
                 margin-left: 60px;
-                width: 800px;
-                
+                width: 830px;
+                float: left;
             }
             input[type=text]
             {
@@ -96,9 +97,12 @@
     </head>
     <body>
         <h1 style="font-family: monospace; margin-left:60px; font-size:40px">
-            Attack Paths and Commands
+            APComs - Attack Paths and Commands
             <br>
         </h1>
+
+        <img src="https://raw.githubusercontent.com/SecurityNoodle/APComs/main/APComs.png" float="right" height="300px" width="300px">
+        
         <p>
             This page will contain a high-level overview of general attack paths, vectors, and commands that I’ve utilized from competitions and CTFs. The page was built to help prepare for the OSCP certification exam along with having a readily available resource to use during the exam.
             <br>
@@ -106,6 +110,7 @@
             For organization and ease of use, each of the attack paths and their commands are organized based on the MITRE ATT&CK framework.
         </p>
 
+        <br><br>
         <div class="search-box">
             <input type="text" id="inputFilter" placeholder="Type in a keyword..." style="margin-left: 60px;" onkeyup="typeFilter()">
         </div>
