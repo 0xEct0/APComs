@@ -171,6 +171,44 @@ fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.jso
         new_cell3.innerHTML = myJson.init[i].description;            
     }
 
+    // add the privesc commands
+    length = myJson.privesc.length;
+    for (i = 0; i < length; i++)
+    {
+        new_row = tbl.insertRow(-1);
+        new_cell1 = new_row.insertCell(0); // creates first cell
+        new_cell2 = new_row.insertCell(1); // creates second cell
+        new_cell3 = new_row.insertCell(2);  // creates third cell
+        new_cell1.innerHTML = myJson.privesc[i].command;
+        new_cell2.innerHTML = myJson.privesc[i].section;
+        new_cell3.innerHTML = myJson.privesc[i].description;            
+    }
+
+    // add the discovery commands
+    length = myJson.discovery.length;
+    for (i = 0; i < length; i++)
+    {
+        new_row = tbl.insertRow(-1);
+        new_cell1 = new_row.insertCell(0); // creates first cell
+        new_cell2 = new_row.insertCell(1); // creates second cell
+        new_cell3 = new_row.insertCell(2);  // creates third cell
+        new_cell1.innerHTML = myJson.discovery[i].command;
+        new_cell2.innerHTML = myJson.discovery[i].section;
+        new_cell3.innerHTML = myJson.discovery[i].description;            
+    }
+
+    // add the file movement commands
+    length = myJson.file.length;
+    for (i = 0; i < length; i++)
+    {
+        new_row = tbl.insertRow(-1);
+        new_cell1 = new_row.insertCell(0); // creates first cell
+        new_cell2 = new_row.insertCell(1); // creates second cell
+        new_cell3 = new_row.insertCell(2);  // creates third cell
+        new_cell1.innerHTML = myJson.file[i].command;
+        new_cell2.innerHTML = myJson.file[i].section;
+        new_cell3.innerHTML = myJson.file[i].description;            
+    }
 });
 
 // Text field search
@@ -255,6 +293,45 @@ function clearFields()
             new_cell1.innerHTML = myJson.init[i].command;
             new_cell2.innerHTML = myJson.init[i].section;
             new_cell3.innerHTML = myJson.init[i].description;            
+        }
+
+        // add the privesc commands
+        length = myJson.privesc.length;
+        for (i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.privesc[i].command;
+            new_cell2.innerHTML = myJson.privesc[i].section;
+            new_cell3.innerHTML = myJson.privesc[i].description;            
+        }
+
+        // add the discovery commands
+        length = myJson.discovery.length;
+        for (i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.discovery[i].command;
+            new_cell2.innerHTML = myJson.discovery[i].section;
+            new_cell3.innerHTML = myJson.discovery[i].description;            
+        }
+
+        // add the file movement commands
+        length = myJson.file.length;
+        for (i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.file[i].command;
+            new_cell2.innerHTML = myJson.file[i].section;
+            new_cell3.innerHTML = myJson.file[i].description;            
         }
     });
 }
