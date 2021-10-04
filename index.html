@@ -12,24 +12,47 @@
         <style>
             p
             {
-                font-family: "Lucida Console";
+                font-family: "Helvetica Neue", "Arial", "sans-serif";
                 font-size: 20px;
-                margin:30px;
-                margin-right:30%;
+                margin-left: 60px;
+                width: 800px;
+                
+            }
+            input[type=text]
+            {
+                width: 255px;
+                box-sizing: border-box;
+                border: 2px solid #c13f21;
+                border-radius: 4px;
+                font-size: 16px;
+                background-color: white;
+                background-position: 10px 10px; 
+                background-repeat: no-repeat;
+                padding: 12px 20px 12px 40px;
+                -webkit-transition: width 0.4s ease-in-out;
+                transition: width 0.4s ease-in-out;
+            }
+            input[type=text]:focus 
+            {
+                width: 1130px;
             }
             #AttackTable
             {
-                margin-left: 30px;
-                border: 1px solid black;
+                margin-left: 60px;
+                border: 1px solid #bd6f5c;
+                border-right: none;
+                border-left: none;
                 border-collapse: collapse;
                 word-wrap: break-word;
                 table-layout: fixed;
-                width: 80%;
+                width: 1130px;
             }
             #AttackTable th
             {
-                background-color: rgb(0, 128, 145);
-                border: 1px solid black;
+                background-color: #c13f21;
+                border: 1px solid #bd6f5c;
+                border-right: none;
+                border-left: none;
                 color: white;
                 padding-top: 12px;
                 padding-bottom: 12px;
@@ -40,16 +63,41 @@
             }
             #AttackTable td
             {
-                
-                border: 1px solid black;
+                border: 1px solid #bd6f5c;
+                border-right: none;
+                border-left: none;
                 padding: 8px;
                 font-family: "Helvetica Neue", "Arial", sans-serif;
+            }
+            #AttackTable td:nth-child(1)
+            {
+                font-family: monospace;
+            }
+            .filter_button
+            {
+                background-color: white;
+                border: 2px solid #c13f21;
+                color: black;
+                padding: 16px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                transition-duration: 0.4s;
+                cursor: pointer;
+            }
+            .filter_button:hover
+            {
+                background-color: #c13f21;
+                color: white;
             }
         </style>
     </head>
     <body>
-        <h1 style="font-family: monospace; margin:20px; font-size:40px">
-            AttackCommands
+        <h1 style="font-family: monospace; margin-left:60px; font-size:40px">
+            Attack Paths and Commands
+            <br>
         </h1>
         <p>
             This page will contain a high-level overview of general attack paths, vectors, and commands that I’ve utilized from competitions and CTFs. The page was built to help prepare for the OSCP certification exam along with having a readily available resource to use during the exam.
@@ -58,23 +106,22 @@
             For organization and ease of use, each of the attack paths and their commands are organized based on the MITRE ATT&CK framework.
         </p>
 
-
         <div class="search-box">
-            <input type="text" id="inputFilter" placeholder="Type in keyword" style="margin-left: 30px;" onkeyup="typeFilter()">
+            <input type="text" id="inputFilter" placeholder="Type in a keyword..." style="margin-left: 60px;" onkeyup="typeFilter()">
         </div>
 
         <br>
-        <button style="margin-left: 30px;" onclick="clearFields();">Reset</button>
-        <button>Recon</button>
-        <button>Initial Access Exploitation</button>
-        <button>Privilege Escalation</button>
-        <button>Discovery</button>
-        <button>Exfiltration/File Movement</button>
+        <button class="filter_button" style="margin-left: 60px;" onclick="clearFields();">Show All</button>
+        <button class="filter_button" onclick="onlyRecon();">Recon</button>
+        <button class="filter_button" onclick="onlyInit();">Initial Access Exploitation</button>
+        <button class="filter_button" onclick="onlyPrivesc();">Privilege Escalation</button>
+        <button class="filter_button" onclick="onlyDiscovery();">Discovery</button>
+        <button class="filter_button" onclick="onlyFile();">Exfiltration/File Movement</button>
         <br><br>
 
         <table id="AttackTable">
             <tr class="header">
-                <th>Command</th>
+                <th>Command/Path</th>
                 <th width="125px">Section</th>
                 <th>Description</th>
             </tr>
@@ -84,16 +131,13 @@
 
 <script>
 
-fetch('https://raw.githubusercontent.com/SecurityNoodle/AttackCommands/main/Commands.json')
+fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
 .then((response) => 
 {
     return response.json();
 })
 .then((myJson) => 
-{
-    console.log(myJson);
-    console.log(myJson.init[0].command);
-    
+{  
     // initialize variables to add to table
     var tbl = document.getElementById('AttackTable');
     var new_row; // the new row to be added
@@ -113,8 +157,23 @@ fetch('https://raw.githubusercontent.com/SecurityNoodle/AttackCommands/main/Comm
         new_cell2.innerHTML = myJson.recon[i].section;
         new_cell3.innerHTML = myJson.recon[i].description;        
     }
+
+    // add the initial access commands
+    length = myJson.init.length;
+    for (i = 0; i < length; i++)
+    {
+        new_row = tbl.insertRow(-1);
+        new_cell1 = new_row.insertCell(0); // creates first cell
+        new_cell2 = new_row.insertCell(1); // creates second cell
+        new_cell3 = new_row.insertCell(2);  // creates third cell
+        new_cell1.innerHTML = myJson.init[i].command;
+        new_cell2.innerHTML = myJson.init[i].section;
+        new_cell3.innerHTML = myJson.init[i].description;            
+    }
+
 });
 
+// Text field search
 const typeFilter = () =>
 {
     const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
@@ -130,10 +189,14 @@ const typeFilter = () =>
     trs.forEach(setTrStyleDisplay);
 };
 
+
+// Clears the fields and shows everything
 function clearFields()
 {
+    // Clear the search bar text
     document.getElementById("inputFilter").value = "";
     
+    // Clear the text search filter
     const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
     const filter = document.querySelector('#inputFilter').value;
     const regex = new RegExp(filter, 'i');
@@ -143,8 +206,368 @@ function clearFields()
     {
         style.display = isFound([...children]) ? '' : 'none';
     };
-  
     trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Show everything
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    {  
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the recon commands
+        var length = myJson.recon.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.recon[i].command;
+            new_cell2.innerHTML = myJson.recon[i].section;
+            new_cell3.innerHTML = myJson.recon[i].description;        
+        }
+
+        // add the initial access commands
+        var length = myJson.init.length;
+        for (i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.init[i].command;
+            new_cell2.innerHTML = myJson.init[i].section;
+            new_cell3.innerHTML = myJson.init[i].description;            
+        }
+    });
 }
 
+
+// Show only recon commands
+function onlyRecon()
+{
+    // Clear the search bar text
+    document.getElementById("inputFilter").value = "";
+    
+    // Clear the text search filter
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+    trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Add only recon commands
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the recon commands
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    {
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the recon commands
+        var length = myJson.recon.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.recon[i].command;
+            new_cell2.innerHTML = myJson.recon[i].section;
+            new_cell3.innerHTML = myJson.recon[i].description;        
+        }
+    });
+}
+
+function onlyInit()
+{
+    // Clear the search bar text
+    document.getElementById("inputFilter").value = "";
+    
+    // Clear the text search filter
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+    trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Add only Initial Access commands
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the Initial Access commands
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    {
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the init commands
+        var length = myJson.init.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.init[i].command;
+            new_cell2.innerHTML = myJson.init[i].section;
+            new_cell3.innerHTML = myJson.init[i].description;        
+        }
+    });
+}
+
+function onlyPrivesc()
+{
+    // Clear the search bar text
+    document.getElementById("inputFilter").value = "";
+    
+    // Clear the text search filter
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+    trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Add only privesc commands
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the privesc commands
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    { 
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the privesc commands
+        var length = myJson.privesc.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.privesc[i].command;
+            new_cell2.innerHTML = myJson.privesc[i].section;
+            new_cell3.innerHTML = myJson.privesc[i].description;        
+        }
+    });
+}
+
+function onlyDiscovery()
+{
+    // Clear the search bar text
+    document.getElementById("inputFilter").value = "";
+    
+    // Clear the text search filter
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+    trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Add only discovery commands
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the discovery commands
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    { 
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the discovery commands
+        var length = myJson.discovery.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.discovery[i].command;
+            new_cell2.innerHTML = myJson.discovery[i].section;
+            new_cell3.innerHTML = myJson.discovery[i].description;        
+        }
+    });
+}
+
+function onlyFile()
+{
+    // Clear the search bar text
+    document.getElementById("inputFilter").value = "";
+    
+    // Clear the text search filter
+    const trs = document.querySelectorAll('#AttackTable tr:not(.header)');
+    const filter = document.querySelector('#inputFilter').value;
+    const regex = new RegExp(filter, 'i');
+    const isFoundInTds = (td) => regex.test(td.innerHTML);
+    const isFound = (childrenArr) => childrenArr.some(isFoundInTds);
+    const setTrStyleDisplay = ({ style, children }) => 
+    {
+        style.display = isFound([...children]) ? '' : 'none';
+    };
+    trs.forEach(setTrStyleDisplay);
+    
+    // Clear table except header
+    var table = document.getElementById("AttackTable");
+    for(var i = table.rows.length - 1; i > 0; i--)
+    {
+        table.deleteRow(i);
+    }
+
+    // Add only file commands
+    // initialize variables to add to table
+    var tbl = document.getElementById('AttackTable');
+    var new_row; // the new row to be added
+    var new_cell1; // first cell in new row
+    var new_cell2; // second cell in new row
+    var new_cell3; // third cell in new row
+    
+    // add the file commands
+    fetch('https://raw.githubusercontent.com/SecurityNoodle/APComs/main/Commands.json')
+    .then((response) => 
+    {
+        return response.json();
+    })
+    .then((myJson) => 
+    { 
+        // initialize variables to add to table
+        var tbl = document.getElementById('AttackTable');
+        var new_row; // the new row to be added
+        var new_cell1; // first cell in new row
+        var new_cell2; // second cell in new row
+        var new_cell3; // third cell in new row
+        
+        // add the file commands
+        var length = myJson.file.length;
+        for (var i = 0; i < length; i++)
+        {
+            new_row = tbl.insertRow(-1);
+            new_cell1 = new_row.insertCell(0); // creates first cell
+            new_cell2 = new_row.insertCell(1); // creates second cell
+            new_cell3 = new_row.insertCell(2);  // creates third cell
+            new_cell1.innerHTML = myJson.file[i].command;
+            new_cell2.innerHTML = myJson.file[i].section;
+            new_cell3.innerHTML = myJson.file[i].description;        
+        }
+    });
+}
 </script>
