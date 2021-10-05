@@ -3,48 +3,53 @@
     [
         {   
             "command": "nmap -sC -sV -oA [name] [address]",
-            "section": "recon",
+            "section": "Recon",
             "description": "This will save the results in three file formats: '.nmap', '.gmap', and '.xml' (The '.nmap' file will store the output as you would normally see it on the terminal.)"
         },
         {
             "command": "nmap -p- -sC -sV -oA [name] [address]",
-            "section": "recon",
+            "section": "Recon",
             "description": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
         },
         {
             "command": "dirb [url] [wordlist]",
-            "section": "recon",
+            "section": "Recon",
             "description": "Can also utilize the GUI version dirbuster (though I find that to be slower)."
         },
         {
             "command": "gobuster dir -u [address] -w [wordlist] -o [name] -t [threads]",
-            "section": "recon",
+            "section": "Recon",
             "description": "On Kali Linux, wordlists stored under /usr/share/wordlists/. In the example, the '-o' and the '-t' flags are not necessasry."
         },
         {
             "command": "wfuzz --hc 404 -Z -w [wordlist] -u [domain]/FUZZ/[file name]",
-            "section": "recon",
+            "section": "Recon",
             "description": "This situation/example was from a HackTheBox challenge (Obscurity) where it was discovered that there was a file named 'SuperSecureServer.py' in some unknown directory. In this case, I used wfuzz to find what the directory name is. It will replace 'FUZZ' with every word in the wordlists."
         },
         {
             "command": "wfuzz --sc 200 -w [wordlist] -H \"Host: FUZZ.[domain]\" -u [domain]",
-            "section": "recon",
+            "section": "Recon",
             "description": "Needs to have the quotation marks."
         },
         {
             "command": "python3 sublist3r.py -d [domain]",
-            "section": "recon",
+            "section": "Recon",
             "description": "Needs to be installed: sudo git clone https://github.com/aboul3la/Sublist3r /opt/sublist3r"
         },
         {
             "command": "enum4linux [address]",
-            "section": "recon",
+            "section": "Recon",
             "description": "The output is pretty noisy, recommend outputing to file."
         },
         {
+            "command": "wpscan --url [address] --enumerate u",
+            "section": "Recon",
+            "description": "Enumerate users on a WordPress website."
+        },
+        {
             "command": "wpscan --url [address] --enumerate p",
-            "section": "recon",
-            "description": "[Needs to be vetted] Scans a WordPress website's plugins."
+            "section": "Recon",
+            "description": "Enumerate plugins on a WordPress website."
         }
     ],
     
@@ -74,9 +79,44 @@
     "discovery":
     [
         {
-            "command": "winPEASx86",
+            "command": "Using winPEAS",
             "section": "Discovery",
-            "description": "WinPEAS is exclusive to Windows - linPEAS is the linux equiavlent. There is x86 and x64 versions available, do the 'systeminfo' command on cmd.exe to see the computer architecture. There is a lot of output, so would recommend outputting to a file."
+            "description": "[Windows] WinPEAS is exclusive to Windows - linPEAS is the linux equiavlent. There is x86 and x64 versions available, do the 'systeminfo' command on cmd.exe to see the computer architecture. There is a lot of output, so would recommend outputting to a file."
+        },
+        {
+            "command": "Using windows-exploit-suggester",
+            "section": "Discovery",
+            "description": "On the (victim) windows shell, do 'systeminfo' and save the output. <br><br> On the kali (attacker) system, do 'python windows-exploit-suggester.py --update'. This should output an xls or xlsx file. <br><br> (Might have to do 'pip install xlrd') Then do 'python windows-exploit-suggester.py --database [.xls file] --systeminfo [systeminfo file]'. From their github page: \"This tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins.\""
+        },
+        {
+            "command": "net user [user]",
+            "section": "Discovery",
+            "description": "[Windows] Gets information on the user, can be utilized to check what groups a user is in. Groups will be listed under Global Group Memberships and/or Local Group Memberships"
+        },
+        {
+            "command": "Get-ADGroupMember [AD Group] | select name",
+            "section": "Discovery",
+            "description": "[Windows] PowerShell command that gets all members of the AD group, then from that list only output the names."
+        },
+        {
+            "command": "cat /etc/passwd",
+            "section": "Discovery",
+            "description": "[Linux] Check the /etc/passwd file for the list o users that are present on the system."
+        },
+        {
+            "command": "find [directory] -user [user] 2>&1 | grep -v \"Permission denied\"",
+            "section": "Discovery",
+            "description": "[Linux] Finds all files starting from the directory supplied that is owned by the user. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
+        },
+        {
+            "command": "find <directory> -group <group> 2>&1 | grep -v \"Permission denied\"",
+            "section": "Discovery",
+            "description": "Finds all files starting from the directory supplised that is owned by the group. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
+        },
+        {
+            "command": "netstat -tulp",
+            "section": "Discovery",
+            "description": "[Linux] Utilizes the netstat command to look for tcp (the t in the command) and udp (the u in the command) ports that are listening (l) and prints output with program names (p)."
         }
     ],
 
