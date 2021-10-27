@@ -12,7 +12,7 @@
             "description": "Similar to the basic nmap scan except it will check all ports, the '-oA' will save it in the three main file formats, you don't have to include this."
         },
         {
-            "command": "smbmap -H [IP]<br>or<br> smbmap -H [IP] -d [domain]",
+            "command": "smbmap -H [IP]<br><br>or<br><br> smbmap -H [IP] -d [domain]",
             "section": "Recon",
             "description": "Enumerate available SMB shares, default port is 139. For the IP address, you don't have to indicate the port, just put the IP address. If you get 'Authentication Error on IP' try adding a fake user flag of '-u notarealuser'"
         },
@@ -105,6 +105,16 @@
             "description": "[Windows] If you see that runas /savecred is available or have identified stored credentials for a privileged user, you can run commands as that privileged user without supplying a password. Generate a reverse shell using msfvenom, upload to victim system, and run it using the runas command."
         },
         {
+            "command": "JuicyPotato.exe -l 1337 -p c:\\windows\\system32\\cmd.exe -t *",
+            "section": "Privilege Escalation",
+            "description": "[Windows] This is a type of a token impersonation attack. From the JuicyPotato github, JuicyPotato \"leverages the privilege escalation chain based on BITS service having the MiTM listener on 127.0.0.1:6666 and when you have SeImpersonate or SeAssignPrimaryToken privileges.\" Having the SeImpersoante or SeAssignPrimaryToken privileges is the important part. Check the github for more information."
+        },
+        {
+            "command": "PrintSpoofer64.exe -i -c cmd",
+            "section": "Privilege Escalation",
+            "description": "[Windows] Windows has a feature that allows service accounts to access the system user via these privileges/tokens - this is a type of a token impersonation attack. For PrintSpoofer, THE ONLY REQUIRED PRIVILEGE IS 'SeImpersonatePrivilege'. PrintSpoofer has been tested on Windows 10 and Windows Server 2016/2019 - it may work on older version of windows according to the PrintSpoofer github."
+        },
+        {
             "command": "GTFObins",
             "section": "Privilege Escalation",
             "description" : "[Windows][Linux] Check the GTFOBins website and find executables that you can run as a higher level user. This website contains a curated list of binaries that can produce a shell."
@@ -112,7 +122,7 @@
         {
             "command": "Tar Wildcard Exploit",
             "section": "Privilege Escalation",
-            "description": "Wildcard exploit happens when a command utilizes a wildcard (such as *). When a wildcard in a command is used (such as cat *), it will execute that command on every file. So for example, if there are 3 text files named 1.txt, 2.txt, and -help and you do cat *.txt, it will technically execute cat 1.txt, cat 2.txt, and cat -help. Certain commands are exploitable by achieving remote code execution. <br><br>For tar, tar has two switches --chechpoint=[number] and --checkpoint-action=[ACTION]. Once a checkpoint is reached, it will perform the specified action. You can name files as these two switches to achieve code execution. Research tar wildcard exploit on google to read more."
+            "description": "[Linux] Wildcard exploit happens when a command utilizes a wildcard (such as *). When a wildcard in a command is used (such as cat *), it will execute that command on every file. So for example, if there are 3 text files named 1.txt, 2.txt, and -help and you do cat *.txt, it will technically execute cat 1.txt, cat 2.txt, and cat -help. Certain commands are exploitable by achieving remote code execution. <br><br>For tar, tar has two switches --chechpoint=[number] and --checkpoint-action=[ACTION]. Once a checkpoint is reached, it will perform the specified action. You can name files as these two switches to achieve code execution. Research tar wildcard exploit on google to read more."
         },
         {
             "command": "sudo -l",
@@ -124,14 +134,9 @@
     "discovery":
     [
         {
-            "command": "Using winPEAS",
+            "command": "whoami /priv <br><br> whoami /all",
             "section": "Discovery",
-            "description": "[Windows] WinPEAS is exclusive to Windows - linPEAS is the linux equiavlent. There is x86 and x64 versions available, do the 'systeminfo' command on cmd.exe to see the computer architecture. There is a lot of output, so would recommend outputting to a file."
-        },
-        {
-            "command": "Using windows-exploit-suggester",
-            "section": "Discovery",
-            "description": "[Windows]<br>1. On the (victim) windows shell, do 'systeminfo' and save the output. <br><br> 2. On the kali (attacker) system, do 'python windows-exploit-suggester.py --update'. This should output an xls or xlsx file. <br><br> 3. (Might have to do 'pip install xlrd') Then do 'python windows-exploit-suggester.py --database [.xls file] --systeminfo [systeminfo file]'. From their github page: \"This tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins.\""
+            "description": "[Windows] View user security privileges. '/all' will display all information in the current access token, including the current user name, security identifiers (SID), privileges, and groups that the current user belongs to. <br><br> According to TryHackMe, the most commonly abused privileges are: <br>-SeImpersonatePrivilege <br>-SeAssignPrimaryPrivilege <br>-SeTcbPrivilege <br>-SeBackupPrivilege <br>-SeRestorePrivilege <br>-SeCreateTokenPrivilege <br>-SeLoadDriverPrivilege <br>-SeTakeOwnershipPrivilege <br>-SeDebugPrivilege <br><br> THE TWO MAIN ONES TO CHECK FOR ARE 'SeImpersonatePrivilege' OR 'SeAssignPrimaryToken'! \"If you have SeAssignPrimaryToken or SeImpersonate privilege, you are SYSTEM.\" If you see these enabled check the JuicyPotato and PrintSpoofer commands in the privesc section."
         },
         {
             "command": "net user [user]",
@@ -147,6 +152,16 @@
             "command": "Get-ADGroupMember [AD Group] | select name",
             "section": "Discovery",
             "description": "[Windows] PowerShell command that gets all members of the AD (Active Directory) group, then from that list only output the names."
+        },
+        {
+            "command": "Using winPEAS",
+            "section": "Discovery",
+            "description": "[Windows] WinPEAS is exclusive to Windows - linPEAS is the linux equiavlent. There is x86 and x64 versions available, do the 'systeminfo' command on cmd.exe to see the computer architecture. There is a lot of output, so would recommend outputting to a file."
+        },
+        {
+            "command": "Using windows-exploit-suggester",
+            "section": "Discovery",
+            "description": "[Windows]<br>1. On the (victim) windows shell, do 'systeminfo' and save the output. <br><br> 2. On the kali (attacker) system, do 'python windows-exploit-suggester.py --update'. This should output an xls or xlsx file. <br><br> 3. (Might have to do 'pip install xlrd') Then do 'python windows-exploit-suggester.py --database [.xls file] --systeminfo [systeminfo file]'. From their github page: \"This tool compares a targets patch levels against the Microsoft vulnerability database in order to detect potential missing patches on the target. It also notifies the user if there are public exploits and Metasploit modules available for the missing bulletins.\""
         },
         {
             "command": "Check /etc/passwd",
