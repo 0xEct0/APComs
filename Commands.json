@@ -267,6 +267,41 @@
             "command": "netstat -na",
             "section": "Discovery",
             "description": "[Windows] Check recently connected systems."
+        },
+        {
+            "command": "net group \"Domain Admins\" /domain",
+            "section": "Discovery",
+            "description": "[Windows] List all users in the domain admin group Domain Admins."
+        },
+        {
+            "command": "net group /domain",
+            "section": "Discovery",
+            "description": "[Windows] List all groups in domain."
+        },
+        {
+            "command": "net localgroup",
+            "section": "Discovery",
+            "description": "[Windows] List local groups."
+        },
+        {
+            "command": "net localgroup administrators",
+            "section": "Discovery",
+            "description": "[Windows] List members of a local admin group."
+        },
+        {
+            "command": "net user",
+            "section": "Discovery",
+            "description": "[Windows] List local users."
+        },
+        {
+            "command": "net user /domain",
+            "section": "Discovery",
+            "description": "[Windows] Check domain users."
+        },
+        {
+            "command": "netsh advfirewall show allprofiles",
+            "section": "Discovery",
+            "description": "[Windows] See whole configuration of built-in Windows firewall."
         }
     ],
 
@@ -296,6 +331,16 @@
             "command": "mount //[ip]/[share] [local location] -o username=[user] <br><br>unmount [local location]",
             "section": "Exfiltration/File Movement",
             "description": "Mount/unmount an smb share to the local file system."
+        },
+        {
+            "command": "net use * \\\\[target]\\[share] [password] /u:[user]",
+            "section": "Exfiltration/File Movement",
+            "description": "Mount a share on a target. Do 'net use * /del' to drop all SMB sessions."
+        },
+        {
+            "command": "net use \\[target] [password] /u:[user]",
+            "section": "Exfiltration/File Movement",
+            "description": "Set up a SMB session with credentials."
         }
     ]
 }
